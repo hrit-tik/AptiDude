@@ -1,0 +1,38 @@
+{
+    "problems": [
+        {
+            "title": "Your Question Title",
+            "description": "Full question description. Can be multi-line.",
+            "difficulty": "Easy",
+            "category_slug": "quant",
+            "answer_type": "mcq",
+            "options": [
+                "Option A",
+                "Option B",
+                "Option C",
+                "Option D"
+            ],
+            "correct_answer": "Option A",
+            "explanation": "Step by step explanation of the answer.",
+            "constraints_info": "Any constraints or notes (optional).",
+            "examples": [
+                {
+                    "input": "Example input",
+                    "output": "Expected output"
+                }
+            ]
+        },
+        {
+            "title": "Numerical Answer Example",
+            "description": "What is 2 + 2?",
+            "difficulty": "Easy",
+            "category_slug": "quant",
+            "answer_type": "numerical",
+            "options": null,
+            "correct_answer": "4",
+            "explanation": "2 + 2 = 4",
+            "constraints_info": null,
+            "examples": []
+        }
+    ]
+}
