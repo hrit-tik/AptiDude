@@ -43,21 +43,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const supabase = getSupabase();
 
     const fetchProfile = async (userId: string) => {
-        const { data } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', userId)
-            .single();
-        if (data) setProfile(data as UserProfile);
+        try {
+            const { data } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
+            if (data) setProfile(data as UserProfile);
+        } catch {
+            // Profile fetch failed (possible CORS issue) - continue without profile
+        }
     };
 
     useEffect(() => {
         // Get initial session
         const initSession = async () => {
-            const { data: { session: initialSession } } = await supabase.auth.getSession();
-            setSession(initialSession);
-            setUser(initialSession?.user ?? null);
-            if (initialSession?.user) fetchProfile(initialSession.user.id);
+            try {
+                const { data: { session: initialSession } } = await supabase.auth.getSession();
+                setSession(initialSession);
+                setUser(initialSession?.user ?? null);
+                if (initialSession?.user) fetchProfile(initialSession.user.id);
+            } catch {
+                // Session init failed - continue as logged out
+            }
             setLoading(false);
         };
         initSession();

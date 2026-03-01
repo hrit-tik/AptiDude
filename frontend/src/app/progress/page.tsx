@@ -30,35 +30,30 @@ export default function ProgressPage() {
         if (authLoading) return;
         if (!user) { setLoading(false); return; }
 
-        const supabase = getSupabase();
-
         const fetchData = async () => {
-            // Fetch stats using the database function
-            const { data: statsData } = await supabase.rpc('get_user_stats', { p_user_id: user.id });
-            if (statsData) setStats(statsData);
+            try {
+                const res = await fetch('/api/progress', {
+                    headers: { 'x-user-id': user.id },
+                });
+                const json = await res.json();
 
-            // Fetch heatmap
-            const { data: heatmapData } = await supabase.rpc('get_heatmap_data', { p_user_id: user.id });
-            if (heatmapData) setHeatmap(heatmapData);
-
-            // Fetch recent submissions
-            const { data: recentData } = await supabase
-                .from('submissions')
-                .select('is_correct, submitted_at, problems(title, difficulty)')
-                .eq('user_id', user.id)
-                .order('submitted_at', { ascending: false })
-                .limit(10);
-
-            if (recentData) {
-                setRecent(recentData.map((s: Record<string, unknown>) => {
-                    const prob = s.problems as { title: string; difficulty: string } | null;
-                    return {
-                        title: prob?.title || 'Unknown',
-                        difficulty: prob?.difficulty || 'Easy',
-                        is_correct: s.is_correct as boolean,
-                        submitted_at: s.submitted_at as string,
-                    };
-                }));
+                if (res.ok) {
+                    if (json.stats) setStats(json.stats);
+                    if (json.heatmap) setHeatmap(json.heatmap);
+                    if (json.recent) {
+                        setRecent(json.recent.map((s: Record<string, unknown>) => {
+                            const prob = s.problems as { title: string; difficulty: string } | null;
+                            return {
+                                title: prob?.title || 'Unknown',
+                                difficulty: prob?.difficulty || 'Easy',
+                                is_correct: s.is_correct as boolean,
+                                submitted_at: s.submitted_at as string,
+                            };
+                        }));
+                    }
+                }
+            } catch {
+                // Silently fail - stats will show defaults
             }
             setLoading(false);
         };

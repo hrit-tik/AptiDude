@@ -26,22 +26,24 @@ export default function ProfilePage() {
         if (authLoading) return;
         if (!user) { setLoading(false); return; }
 
-        const supabase = getSupabase();
-
         const fetchData = async () => {
-            const { data: statsData } = await supabase.rpc('get_user_stats', { p_user_id: user.id });
-            if (statsData) setStats(statsData);
+            try {
+                const res = await fetch('/api/profile', {
+                    headers: { 'x-user-id': user.id },
+                });
+                const json = await res.json();
 
-            const { data: badgeData } = await supabase
-                .from('user_badges')
-                .select('badges(name, description, icon)')
-                .eq('user_id', user.id);
-
-            if (badgeData) {
-                setBadges(badgeData.map((ub: Record<string, unknown>) => {
-                    const b = ub.badges as Badge;
-                    return { name: b.name, description: b.description, icon: b.icon };
-                }));
+                if (res.ok) {
+                    if (json.stats) setStats(json.stats);
+                    if (json.badges) {
+                        setBadges(json.badges.map((ub: Record<string, unknown>) => {
+                            const b = ub.badges as Badge;
+                            return { name: b.name, description: b.description, icon: b.icon };
+                        }));
+                    }
+                }
+            } catch {
+                // Silently fail
             }
             setLoading(false);
         };
