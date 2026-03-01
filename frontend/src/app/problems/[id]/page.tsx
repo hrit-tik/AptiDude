@@ -217,7 +217,7 @@ export default function ProblemDetailPage({ params }: { params: Promise<{ id: st
                             </button>
                         </div>
 
-                        {showTimer && <div className="mb-5"><Timer onTimeUpdate={(t) => (timeRef.current = t)} /></div>}
+                        {showTimer && <div className="mb-5"><Timer onTimeUpdate={(t) => (timeRef.current = t)} stopped={submitted} /></div>}
 
                         {problem.answer_type === 'mcq' && problem.options ? (
                             <div className="space-y-2 mb-5">

@@ -2,13 +2,18 @@
 
 import { useState, useEffect, useRef } from 'react';
 
-export default function Timer({ onTimeUpdate }: { onTimeUpdate?: (seconds: number) => void }) {
+export default function Timer({ onTimeUpdate, stopped = false }: { onTimeUpdate?: (seconds: number) => void; stopped?: boolean }) {
     const [seconds, setSeconds] = useState(0);
     const [running, setRunning] = useState(true);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+    // Stop the timer when submission happens
     useEffect(() => {
-        if (running) {
+        if (stopped) setRunning(false);
+    }, [stopped]);
+
+    useEffect(() => {
+        if (running && !stopped) {
             intervalRef.current = setInterval(() => {
                 setSeconds((s) => {
                     const newVal = s + 1;
@@ -20,7 +25,7 @@ export default function Timer({ onTimeUpdate }: { onTimeUpdate?: (seconds: numbe
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
-    }, [running, onTimeUpdate]);
+    }, [running, stopped, onTimeUpdate]);
 
     const formatTime = (s: number) => {
         const mins = Math.floor(s / 60);
@@ -36,8 +41,8 @@ export default function Timer({ onTimeUpdate }: { onTimeUpdate?: (seconds: numbe
             <button
                 onClick={() => setRunning(!running)}
                 className={`flex h-7 w-7 items-center justify-center rounded-md text-xs transition-all ${running
-                        ? 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30'
-                        : 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                    ? 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30'
+                    : 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
                     }`}
                 title={running ? 'Pause' : 'Resume'}
             >
