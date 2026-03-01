@@ -87,9 +87,9 @@ export default function CalendarHeatmap({ data }: { data: HeatmapData[] }) {
             <div className="overflow-x-auto">
                 <div className="inline-block">
                     {/* Month labels */}
-                    <div className="flex mb-1 text-[10px] text-[var(--color-text-muted)]" style={{ paddingLeft: '28px' }}>
+                    <div className="relative mb-1 text-[10px] text-[var(--color-text-muted)]" style={{ marginLeft: '28px', height: '16px' }}>
                         {months.map((m, i) => (
-                            <span key={i} style={{ position: 'relative', left: `${m.col * 14}px` }} className="absolute">
+                            <span key={i} style={{ position: 'absolute', left: `${m.col * 14}px` }}>
                                 {m.label}
                             </span>
                         ))}
