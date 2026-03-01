@@ -8,7 +8,7 @@ const fs = require('fs');
 const questionsDir = path.join(__dirname, 'questions');
 const files = fs.readdirSync(questionsDir).filter(f => f.endsWith('.json'));
 
-let sql = '-- Auto-generated SQL for AptiDude questions\n';
+let sql = '-- Auto-generated SQL for Aptive questions\n';
 sql += '-- Run this in Supabase SQL Editor (https://app.supabase.com → SQL Editor)\n\n';
 
 let total = 0;

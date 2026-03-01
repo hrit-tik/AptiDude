@@ -1,7 +1,7 @@
 const Database = require('better-sqlite3');
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, '..', '..', 'data', 'aptidude.db');
+const DB_PATH = path.join(__dirname, '..', '..', 'data', 'aptive.db');
 
 // Ensure data directory exists
 const fs = require('fs');

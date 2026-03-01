@@ -67,7 +67,7 @@ export default function RegisterPage() {
                                 type="text" required value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-input)] px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] outline-none focus:border-[var(--color-accent)] transition-colors"
-                                placeholder="aptidude_pro"
+                                placeholder="aptive_pro"
                             />
                         </div>
                         <div>

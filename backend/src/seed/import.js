@@ -1,5 +1,5 @@
 /**
- * JSON Import Tool for AptiDude
+ * JSON Import Tool for Aptive
  *
  * Usage: node src/seed/import.js <path-to-json-file>
  *
@@ -17,7 +17,7 @@ initializeDatabase();
 const args = process.argv.slice(2);
 if (args.length === 0) {
     console.log(`
-📥 AptiDude Question Import Tool
+📥 Aptive Question Import Tool
 
 Usage:
   node src/seed/import.js <path-to-json-file>

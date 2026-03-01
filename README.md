@@ -1,4 +1,4 @@
-# AptiDude
+# Aptive
 
 A LeetCode-style platform for Aptitude Questions — practice Quantitative Aptitude, Logical Reasoning, Data Interpretation, and Verbal Ability.
 
@@ -33,8 +33,8 @@ cp .env.example .env   # Edit with your PostgreSQL credentials
 npm install
 
 # Set up database
-psql -U postgres -c "CREATE DATABASE aptidude;"
-psql -U postgres -d aptidude -f schema.sql
+psql -U postgres -c "CREATE DATABASE aptive;"
+psql -U postgres -d aptive -f schema.sql
 
 # Seed data
 node src/seed/seed.js
@@ -48,7 +48,7 @@ API runs on [http://localhost:5000](http://localhost:5000).
 ## Project Structure
 
 ```
-AptiDude/
+Aptive/
 ├── frontend/               # Next.js application
 │   └── src/
 │       ├── app/            # Pages (App Router)

@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AptiDude — Master Aptitude Problems",
+  title: "Aptive — Master Aptitude Problems",
   description: "A LeetCode-style platform for Aptitude Questions. Practice Quant, Logical Reasoning, Data Interpretation, and Verbal Ability problems.",
   keywords: ["aptitude", "practice", "quant", "logical reasoning", "data interpretation", "verbal ability"],
 };

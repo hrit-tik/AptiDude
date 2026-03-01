@@ -1,4 +1,4 @@
--- Auto-generated SQL for AptiDude questions
+-- Auto-generated SQL for Aptive questions
 -- Run this in Supabase SQL Editor (https://app.supabase.com → SQL Editor)
 
 -- ===== DI (42 questions) =====

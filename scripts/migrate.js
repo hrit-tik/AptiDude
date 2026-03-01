@@ -1,5 +1,5 @@
 /**
- * AptiDude Migration Script
+ * Aptive Migration Script
  * Reads problems from local SQLite and uploads them to Supabase
  *
  * Usage:

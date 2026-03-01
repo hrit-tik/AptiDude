@@ -32,7 +32,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 AptiDude API running on http://localhost:${PORT}`);
+    console.log(`🚀 Aptive API running on http://localhost:${PORT}`);
 });
 
 module.exports = app;

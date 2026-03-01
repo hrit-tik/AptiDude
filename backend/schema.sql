@@ -1,4 +1,4 @@
--- AptiDude Database Schema
+-- Aptive Database Schema
 
 -- Users table
 CREATE TABLE users (

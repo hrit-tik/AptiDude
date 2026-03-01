@@ -1,5 +1,5 @@
 -- ============================================
--- AptiDude — Supabase Schema
+-- Aptive — Supabase Schema
 -- Run this ENTIRE file in Supabase SQL Editor
 -- ============================================
 

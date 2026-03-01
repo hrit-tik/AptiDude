@@ -26,7 +26,7 @@ export default function Navbar() {
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold text-lg shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-shadow">
                         A
                     </div>
-                    <span className="text-xl font-bold gradient-text hidden sm:block">AptiDude</span>
+                    <span className="text-xl font-bold gradient-text hidden sm:block">Aptive</span>
                 </Link>
 
                 {/* Desktop Navigation */}
