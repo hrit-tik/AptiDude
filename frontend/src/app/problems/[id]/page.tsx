@@ -106,16 +106,23 @@ export default function ProblemDetailPage({ params }: { params: Promise<{ id: st
         const correct = answer.toString().trim().toLowerCase() === problem.correct_answer.trim().toLowerCase();
         setIsCorrect(correct);
 
-        // Submit to Supabase if logged in
+        // Submit via API route if logged in
         if (user && isLive) {
-            const supabase = getSupabase();
-            await supabase.from('submissions').insert({
-                user_id: user.id,
-                problem_id: problem.id,
-                answer,
-                is_correct: correct,
-                time_taken: timeRef.current,
-            });
+            try {
+                await fetch('/api/submissions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: user.id,
+                        problem_id: problem.id,
+                        answer,
+                        is_correct: correct,
+                        time_taken: timeRef.current,
+                    }),
+                });
+            } catch {
+                // Submission save failed - still show result to user
+            }
         }
 
         setSubmitted(true);

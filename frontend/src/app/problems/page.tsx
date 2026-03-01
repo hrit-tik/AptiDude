@@ -59,14 +59,16 @@ export default function ProblemsPage() {
     // Fetch user's solved problems
     useEffect(() => {
         if (!user) return;
-        const supabase = getSupabase();
         const fetchSolved = async () => {
-            const { data } = await supabase
-                .from('submissions')
-                .select('problem_id')
-                .eq('user_id', user.id)
-                .eq('is_correct', true);
-            if (data) setSolvedIds(new Set(data.map((s: { problem_id: number }) => s.problem_id)));
+            try {
+                const res = await fetch('/api/submissions', {
+                    headers: { 'x-user-id': user.id },
+                });
+                const json = await res.json();
+                if (json.data) setSolvedIds(new Set(json.data.map((s: { problem_id: number }) => s.problem_id)));
+            } catch {
+                // Silently fail
+            }
         };
         fetchSolved();
     }, [user]);
