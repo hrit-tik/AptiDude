@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import ProblemTable from '@/components/ProblemTable';
 import { sampleProblems } from '@/data/sampleProblems';
-import { getSupabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/lib/auth';
 
 interface SupaProblem {
@@ -23,12 +23,17 @@ interface SupaProblem {
     categories: { name: string; slug: string };
 }
 
-export default function ProblemsPage() {
-    const [search, setSearch] = useState('');
-    const [difficulty, setDifficulty] = useState('');
-    const [category, setCategory] = useState('');
-    const [status, setStatus] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
+function ProblemsContent() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    // Read filter state from URL params (persists across navigation)
+    const search = searchParams.get('search') || '';
+    const difficulty = searchParams.get('difficulty') || '';
+    const category = searchParams.get('category') || '';
+    const status = searchParams.get('status') || '';
+    const currentPage = parseInt(searchParams.get('page') || '1');
+
     const [problems, setProblems] = useState<ReturnType<typeof mapProblem>[]>([]);
     const [total, setTotal] = useState(0);
     const [isLive, setIsLive] = useState(false);
@@ -36,6 +41,16 @@ export default function ProblemsPage() {
     const [solvedIds, setSolvedIds] = useState<Set<number>>(new Set());
     const perPage = 15;
     const { user } = useAuth();
+
+    // Helper to update URL params
+    const updateParams = useCallback((updates: Record<string, string>) => {
+        const params = new URLSearchParams(searchParams.toString());
+        Object.entries(updates).forEach(([key, value]) => {
+            if (value) params.set(key, value);
+            else params.delete(key);
+        });
+        router.replace(`/problems?${params.toString()}`, { scroll: false });
+    }, [searchParams, router]);
 
     function mapProblem(p: SupaProblem) {
         return {
@@ -145,9 +160,9 @@ export default function ProblemsPage() {
                     difficulty={difficulty}
                     category={category}
                     status={status}
-                    onDifficultyChange={(v) => { setDifficulty(v); setCurrentPage(1); }}
-                    onCategoryChange={(v) => { setCategory(v); setCurrentPage(1); }}
-                    onStatusChange={(v) => { setStatus(v); setCurrentPage(1); }}
+                    onDifficultyChange={(v) => updateParams({ difficulty: v, page: '' })}
+                    onCategoryChange={(v) => updateParams({ category: v, page: '' })}
+                    onStatusChange={(v) => updateParams({ status: v, page: '' })}
                 />
 
                 <div className="flex-1 animate-fade-in">
@@ -161,7 +176,7 @@ export default function ProblemsPage() {
                                 type="text"
                                 placeholder="Search problems..."
                                 value={search}
-                                onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
+                                onChange={(e) => updateParams({ search: e.target.value, page: '' })}
                                 className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-input)] py-2.5 pl-10 pr-4 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] outline-none focus:border-[var(--color-accent)] transition-colors"
                             />
                         </div>
@@ -177,7 +192,7 @@ export default function ProblemsPage() {
                         <div className="mt-4 flex items-center justify-center gap-2">
                             <button
                                 disabled={currentPage === 1}
-                                onClick={() => setCurrentPage((p) => p - 1)}
+                                onClick={() => updateParams({ page: String(currentPage - 1) })}
                                 className="flex h-9 items-center rounded-lg border border-[var(--color-border)] px-3 text-sm text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-40 transition-all"
                             >
                                 ← Prev
@@ -185,7 +200,7 @@ export default function ProblemsPage() {
                             {Array.from({ length: Math.min(totalPages, 10) }, (_, i) => (
                                 <button
                                     key={i + 1}
-                                    onClick={() => setCurrentPage(i + 1)}
+                                    onClick={() => updateParams({ page: String(i + 1) })}
                                     className={`flex h-9 w-9 items-center justify-center rounded-lg text-sm font-medium transition-all ${currentPage === i + 1
                                         ? 'bg-[var(--color-accent)] text-white shadow-lg shadow-blue-500/20'
                                         : 'border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)]'
@@ -196,7 +211,7 @@ export default function ProblemsPage() {
                             ))}
                             <button
                                 disabled={currentPage === totalPages}
-                                onClick={() => setCurrentPage((p) => p + 1)}
+                                onClick={() => updateParams({ page: String(currentPage + 1) })}
                                 className="flex h-9 items-center rounded-lg border border-[var(--color-border)] px-3 text-sm text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] disabled:opacity-40 transition-all"
                             >
                                 Next →
@@ -206,5 +221,17 @@ export default function ProblemsPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function ProblemsPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-[60vh] items-center justify-center">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--color-accent)] border-t-transparent" />
+            </div>
+        }>
+            <ProblemsContent />
+        </Suspense>
     );
 }

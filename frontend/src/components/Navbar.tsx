@@ -13,6 +13,7 @@ export default function Navbar() {
 
     const navLinks = [
         { href: '/problems', label: 'Problems', icon: '📋' },
+        { href: '/leaderboard', label: 'Leaderboard', icon: '🏆' },
         { href: '/progress', label: 'Progress', icon: '📊' },
         { href: '/profile', label: 'Profile', icon: '👤' },
     ];
